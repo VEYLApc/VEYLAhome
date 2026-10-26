@@ -1,0 +1,34 @@
+{% extends "vlhomeapp/base.html" %}
+{% block title %}Taomlar{% endblock %}
+
+{% block content %}
+    <h1 class="page-title">Taomlar</h1>
+
+    <div class="chips">
+        <a href="{% url 'dish_list' %}" class="chip {% if not selected_id %}active{% endif %}">Hammasi</a>
+        {% for menu in menus %}
+            <a href="?menu={{ menu.id }}" class="chip {% if selected_id == menu.id %}active{% endif %}">{{ menu.name }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="dish-grid">
+        {% for dish in dishes %}
+            <article class="dish-card">
+                {% if dish.image %}
+                    <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+                {% else %}
+                    <div class="no-image">Rasm yo'q</div>
+                {% endif %}
+                <div class="dish-body">
+                    <h3>{{ dish.name }}</h3>
+                    <p class="muted">{{ dish.menu.name }}</p>
+                    <p class="muted">{{ dish.description }}</p>
+                    <p class="price">{{ dish.price|floatformat:0 }} so'm</p>
+                    <a href="{% url 'order_create' %}" class="btn">Buyurtma berish</a>
+                </div>
+            </article>
+        {% empty %}
+            <p class="muted">Taomlar topilmadi.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "vlhomeapp/base.html" %}
+{% block title %}Buyurtma holati{% endblock %}
+
+{% block content %}
+    <h1 class="page-title">Buyurtma holati</h1>
+    <p class="muted">Buyurtma raqamingizni kiriting.</p>
+
+    <form method="get" class="lookup-form">
+        <input type="text" name="number" placeholder="Masalan: 5" required>
+        <button type="submit" class="btn">Ko'rish</button>
+    </form>
+{% endblock %}

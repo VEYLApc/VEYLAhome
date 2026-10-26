@@ -1,0 +1,40 @@
+{% extends "vlhomeapp/base.html" %}
+{% block title %}Buyurtma #{{ order.id }}{% endblock %}
+
+{% block content %}
+    <meta http-equiv="refresh" content="15">
+
+    <h1 class="page-title">Buyurtma #{{ order.id }}</h1>
+    <p class="muted">
+        {{ order.customer_name }}{% if order.table_number %} · Stol {{ order.table_number }}{% endif %}
+        · {{ order.created_at|date:"d.m.Y H:i" }}
+    </p>
+
+    {% if order.status == "cancelled" %}
+        <div class="alert alert-error">Buyurtma bekor qilindi.</div>
+    {% else %}
+        <ol class="steps">
+            {% for step in steps %}
+                <li class="step {{ step.state }}">{{ step.label }}</li>
+            {% endfor %}
+        </ol>
+        <p class="muted">Sahifa har 15 soniyada o'zi yangilanadi.</p>
+    {% endif %}
+
+    <table class="order-table">
+        <thead><tr><th>Taom</th><th>Soni</th><th>Narxi</th><th>Summa</th></tr></thead>
+        <tbody>
+            {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.dish.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price|floatformat:0 }}</td>
+                    <td>{{ item.subtotal|floatformat:0 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr><td colspan="3">Jami</td><td class="price">{{ order.total_price|floatformat:0 }} so'm</td></tr>
+        </tfoot>
+    </table>
+{% endblock %}

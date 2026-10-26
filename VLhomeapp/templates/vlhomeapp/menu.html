@@ -1,0 +1,40 @@
+{% extends "vlhomeapp/base.html" %}
+
+{% block title %}Menyu{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <h1>{% if restaurant %}{{ restaurant.name }}{% else %}Restoran{% endif %}</h1>
+        <p>{% if restaurant and restaurant.description %}{{ restaurant.description }}{% else %}Mazali taomlar menyusi{% endif %}</p>
+    </section>
+
+    {% for menu in menus %}
+        <section class="menu-section">
+            <h2>{{ menu.name }}</h2>
+            {% if menu.description %}<p class="muted">{{ menu.description }}</p>{% endif %}
+
+            <div class="dish-grid">
+                {% for dish in menu.dishes.all %}
+                    {% if dish.is_available %}
+                    <article class="dish-card">
+                        {% if dish.image %}
+                            <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+                        {% else %}
+                            <div class="no-image">Rasm yo'q</div>
+                        {% endif %}
+                        <div class="dish-body">
+                            <h3>{{ dish.name }}</h3>
+                            <p class="muted">{{ dish.description }}</p>
+                            <p class="price">{{ dish.price|floatformat:0 }} so'm</p>
+                        </div>
+                    </article>
+                    {% endif %}
+                {% empty %}
+                    <p class="muted">Bu bo'limda hali taom yo'q.</p>
+                {% endfor %}
+            </div>
+        </section>
+    {% empty %}
+        <p class="muted">Menyu hali bo'sh.</p>
+    {% endfor %}
+{% endblock %}

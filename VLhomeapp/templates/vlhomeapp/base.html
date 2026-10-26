@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% if restaurant %}{{ restaurant.name }}{% else %}Restoran{% endif %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'vlhomeapp/style.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="{% url 'menu_list' %}" class="brand">
+                {% if restaurant and restaurant.logo %}
+                    <img src="{{ restaurant.logo.url }}" alt="{{ restaurant.name }}" class="brand-logo">
+                {% endif %}
+                <span>{% if restaurant %}{{ restaurant.name }}{% else %}Restoran{% endif %}</span>
+            </a>
+                        <nav class="nav">
+                <a href="{% url 'menu_list' %}" class="{% if request.resolver_match.url_name == 'menu_list' %}active{% endif %}">Menyu</a>
+                <a href="{% url 'dish_list' %}" class="{% if request.resolver_match.url_name == 'dish_list' %}active{% endif %}">Taomlar</a>
+                <a href="{% url 'order_create' %}" class="{% if request.resolver_match.url_name == 'order_create' %}active{% endif %}">Buyurtma</a>
+                <a href="{% url 'order_lookup' %}" class="{% if request.resolver_match.url_name == 'order_lookup' or request.resolver_match.url_name == 'order_detail' %}active{% endif %}">Buyurtma holati</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            {% if restaurant %}
+                <p>{{ restaurant.address }}</p>
+                <p>{{ restaurant.phone }}</p>
+            {% endif %}
+            <p>&copy; {% now "Y" %} {% if restaurant %}{{ restaurant.name }}{% else %}Restoran{% endif %}</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{% extends "vlhomeapp/base.html" %}
+{% block title %}Buyurtma{% endblock %}
+
+{% block content %}
+    <h1 class="page-title">Buyurtma berish</h1>
+
+    <form method="post" class="order-form">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <label>Ismingiz
+                <input type="text" name="customer_name" required maxlength="100" value="{{ request.POST.customer_name }}">
+            </label>
+            <label>Stol raqami
+                <input type="number" name="table_number" min="1" value="{{ request.POST.table_number }}">
+            </label>
+        </div>
+
+        {% regroup dishes by menu as groups %}
+        {% for group in groups %}
+            <h2 class="group-title">{{ group.grouper.name }}</h2>
+            {% for dish in group.list %}
+                <div class="order-row">
+                    <div>
+                        <strong>{{ dish.name }}</strong>
+                        <div class="muted">{{ dish.price|floatformat:0 }} so'm</div>
+                    </div>
+                    <input type="number" name="qty_{{ dish.id }}" min="0" max="50" value="0"
+                           class="qty" data-price="{{ dish.price|stringformat:'s' }}">
+                </div>
+            {% endfor %}
+        {% empty %}
+            <p class="muted">Hozircha taomlar yo'q.</p>
+        {% endfor %}
+
+        <div class="order-total">
+            Jami: <span id="total">0</span> so'm
+            <button type="submit" class="btn">Buyurtma berish</button>
+        </div>
+    </form>
+
+    <script>
+        const qtyInputs = document.querySelectorAll(".qty");
+        const totalEl = document.getElementById("total");
+        function recalc() {
+            let total = 0;
+            qtyInputs.forEach(i => {
+                total += (parseInt(i.value) || 0) * parseFloat(i.dataset.price);
+            });
+            totalEl.textContent = Math.round(total).toLocaleString("ru-RU");
+        }
+        qtyInputs.forEach(i => i.addEventListener("input", recalc));
+        recalc();
+    </script>
+{% endblock %}
