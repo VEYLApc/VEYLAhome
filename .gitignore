@@ -2,11 +2,8 @@ venv/
 .venv/
 __pycache__/
 *.pyc
-<<<<<<< HEAD
-=======
-
->>>>>>> 94afd91cb64a3b265f65c05f5f6d7550c2a12274
 .env
 *.log
 staticfiles/
-media/ 
+media/
+db.sqlite3
